@@ -1,0 +1,22 @@
+[package]
+name = "paper-clip-maximizer"
+version = "0.1.0"
+description = "Created with Anchor"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "paper_clip_maximizer"
+
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+
+[dependencies]
+anchor-lang = "0.26.0"
+solana-program = {git = "https://github.com/blockworks-foundation/solana.git", branch = "application-fees-dev"}
+solana-application-fees-program  = { git = "https://github.com/blockworks-foundation/solana.git", branch = "application-fees-dev" }
+solana-sdk = {git = "https://github.com/blockworks-foundation/solana.git", branch = "application-fees-dev", default-features = false, optional = true }

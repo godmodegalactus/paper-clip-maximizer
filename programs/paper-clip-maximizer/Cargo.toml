@@ -16,7 +16,7 @@ cpi = ["no-entrypoint"]
 default = []
 
 [dependencies]
-anchor-lang = "0.26.0"
-solana-program = {git = "https://github.com/blockworks-foundation/solana.git", branch = "application-fees-dev"}
-solana-application-fees-program  = { git = "https://github.com/blockworks-foundation/solana.git", branch = "application-fees-dev" }
-solana-sdk = {git = "https://github.com/blockworks-foundation/solana.git", branch = "application-fees-dev", default-features = false, optional = true }
+anchor-lang = {git = "https://github.com/blockworks-foundation/anchor.git", branch = "application-fee-tests"}
+solana-program = {git = "https://github.com/blockworks-foundation/solana.git", branch = "application-fees-v1.13.5"}
+solana-application-fees-program  = { git = "https://github.com/blockworks-foundation/solana.git", branch = "application-fees-v1.13.5" }
+solana-sdk = {git = "https://github.com/blockworks-foundation/solana.git", branch = "application-fees-v1.13.5", default-features = false, optional = true }

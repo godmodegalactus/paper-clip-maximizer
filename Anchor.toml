@@ -2,7 +2,7 @@
 seeds = false
 skip-lint = false
 [programs.localnet]
-paper_clip_maximizer = "Fg6PaFpoGXkYsidMpWTK6W2BeZ7FEfcYkg476zPFsLnS"
+paper_clip_maximizer = "m1MbXbpDJxJGrysnftRawJYbnd9GvVJ5bLrQVA27wbw"
 
 [registry]
 url = "https://api.apr.dev"

@@ -4,8 +4,6 @@ use crate::*;
 pub struct PaperclipGroup {
     pub admin: Pubkey,
 
-    pub authority: Pubkey,
-
     // source account / account used to make paper clips
     pub source_account: Pubkey,
 
@@ -16,13 +14,10 @@ pub struct PaperclipGroup {
 }
 
 impl PaperclipGroup {
-    pub fn init(&mut self, admin: Pubkey,) -> (u8, u8, u8, u8) {
+    pub fn init(&mut self, admin: Pubkey,) -> u8 {
 
         let (group_pk, group_bump) =
             Pubkey::find_program_address(&[b"pcm_group" as &[u8], &admin.to_bytes()], &crate::id());
-
-        let (authority, authority_bump) =
-            Pubkey::find_program_address(&[b"authority", &group_pk.to_bytes()], &crate::id());
 
         let (source, source_bump) =
             Pubkey::find_program_address(&[b"source", &group_pk.to_bytes()], &crate::id());
@@ -31,10 +26,9 @@ impl PaperclipGroup {
             Pubkey::find_program_address(&[b"burn", &group_pk.to_bytes()], &crate::id());
 
         self.admin = admin;
-        self.authority = authority;
         self.burn_account = burn;
         self.source_account = source;
         self.number_of_paper_clips_created = 0;
-        (group_bump, authority_bump, source_bump, burn_bump)
+        group_bump
     }
 }

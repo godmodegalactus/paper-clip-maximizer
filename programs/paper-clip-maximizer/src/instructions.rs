@@ -19,37 +19,8 @@ pub struct Initialize<'info> {
         space = 8 + size_of::<PaperclipGroup>(),)]
     pub group: Box<Account<'info, PaperclipGroup>>,
 
-    /// CHECK: authority pda for the group
-    #[account (
-        seeds = [
-            b"authority" as &[u8],
-            &group.to_account_info().key.to_bytes(),
-        ],
-        bump,
-    )]
-    pub authority: AccountInfo<'info>,
-
-    /// CHECK: authority pda for the group
-    #[account (
-        seeds = [
-            b"source" as &[u8],
-            &group.to_account_info().key.to_bytes(),
-        ],
-        bump,
-    )]
-    pub source: AccountInfo<'info>,
-
-    /// CHECK: authority pda for the group
-    #[account (
-        seeds = [
-            b"burn" as &[u8],
-            &group.to_account_info().key.to_bytes(),
-        ],
-        bump,
-    )]
-    pub burn: AccountInfo<'info>,
-
     /// CHECK: application fee pda to apply for group
+    #[account (mut)]
     pub application_fees_pda: AccountInfo<'info>,
 
     pub system_program: Program<'info, System>,

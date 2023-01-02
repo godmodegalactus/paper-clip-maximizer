@@ -6,11 +6,11 @@ mod instructions;
 
 use instructions::*;
 
-declare_id!("m1MbXbpDJxJGrysnftRawJYbnd9GvVJ5bLrQVA27wbw");
+declare_id!("2m9g7TYbAcZwcT3TSxHh4czMS6s7jdNqGpPeNi378XeL");
 
 #[program]
 pub mod paper_clip_maximizer {
-    use anchor_lang::solana_program::{program::invoke_signed, native_token::LAMPORTS_PER_SOL};
+    use anchor_lang::{solana_program::{program::invoke_signed, native_token::LAMPORTS_PER_SOL}};
 
     use super::*;
 
@@ -19,6 +19,22 @@ pub mod paper_clip_maximizer {
         let group_id = group.to_account_info().key();
         let admin_id = ctx.accounts.admin.key;
         let group_bump = group.init(ctx.accounts.admin.key());
+        
+        // allocate 1 SOL to source
+        let transfer_accounts = anchor_lang::system_program::Transfer {
+            from: ctx.accounts.admin.to_account_info().clone(),
+            to :ctx.accounts.source.clone(),
+        };
+        let cpi_context = CpiContext::new( ctx.accounts.system_program.to_account_info(), transfer_accounts);
+        anchor_lang::system_program::transfer(cpi_context, LAMPORTS_PER_SOL)?;
+
+        // allocate 1 SOL to burn
+        let transfer_accounts = anchor_lang::system_program::Transfer {
+            from: ctx.accounts.admin.to_account_info().clone(),
+            to :ctx.accounts.burn.clone(),
+        };
+        let cpi_context = CpiContext::new( ctx.accounts.system_program.to_account_info(), transfer_accounts);
+        anchor_lang::system_program::transfer(cpi_context, LAMPORTS_PER_SOL)?;
 
         let ix_update_fees = solana_application_fees_program::instruction::update_fees( 
             1 * LAMPORTS_PER_SOL, 
@@ -43,10 +59,28 @@ pub mod paper_clip_maximizer {
         assert!(ctx.accounts.source.key.eq(&group.source_account));
         group.number_of_paper_clips_created += number_of_paper_clips_wanted;
 
-        if ctx.accounts.source.lamports() < number_of_paper_clips_wanted {
+        let admin = group.admin;
+        let (group_pk, group_bump) =
+            Pubkey::find_program_address(&[b"pcm_group" as &[u8], &admin.to_bytes()], &crate::id());
+        assert!(group_pk.eq(&group.key()));
 
-        } else {
-            
+        if ctx.accounts.source.lamports() > number_of_paper_clips_wanted + LAMPORTS_PER_SOL {
+            let seeds_group : &[&[u8]] = &[b"pcm_group", &admin.to_bytes(), &[group_bump]];
+            let (_source, source_bump) = Pubkey::find_program_address(&[b"source", &group.key().to_bytes()], &crate::id());
+            let seeds_source : &[&[&[u8]]] = &[&[b"source", &group.key().to_bytes(), &[source_bump]]];
+            let transfer_accounts = anchor_lang::system_program::Transfer {
+                from: ctx.accounts.source.clone(),
+                to :ctx.accounts.burn.clone(),
+            };
+            let cpi_context = CpiContext::new_with_signer( ctx.accounts.system_program.to_account_info(), transfer_accounts, seeds_source);
+            anchor_lang::system_program::transfer(cpi_context, number_of_paper_clips_wanted)?;
+
+            // rebate if there were enough sols
+            let ix_rebate = solana_application_fees_program::instruction::rebate( group.key(), group.key());
+            invoke_signed( 
+                &ix_rebate, 
+                &[ctx.accounts.group.to_account_info().clone(), ctx.accounts.application_fees_program.clone()], 
+                &[seeds_group])?;
         }
         Ok(())
     }

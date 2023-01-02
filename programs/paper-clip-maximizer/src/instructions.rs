@@ -19,6 +19,18 @@ pub struct Initialize<'info> {
         space = 8 + size_of::<PaperclipGroup>(),)]
     pub group: Box<Account<'info, PaperclipGroup>>,
 
+    /// CHECK: source is a derivable address
+    #[account( mut,
+        seeds = [b"source", &group.key().to_bytes()],
+        bump,)]
+    pub source: AccountInfo<'info>,
+
+    /// CHECK: burn is a derivable address
+    #[account( mut,
+        seeds = [b"burn", &group.key().to_bytes()],
+        bump,)]
+    pub burn: AccountInfo<'info>,
+
     /// CHECK: application fee pda to apply for group
     #[account (mut)]
     pub application_fees_pda: AccountInfo<'info>,
@@ -27,6 +39,7 @@ pub struct Initialize<'info> {
 
     /// CHECK: application fee program
     pub application_fees_program: AccountInfo<'info>,
+
 }
 
 
@@ -50,4 +63,13 @@ pub struct MakePaperClips<'info> {
         seeds = [b"burn", &group.key().to_bytes()],
         bump,)]
     pub burn: AccountInfo<'info>,
+
+    pub system_program: Program<'info, System>,
+
+    /// CHECK: application fee program
+    pub application_fees_program: AccountInfo<'info>,
+
+    // payer
+    #[account(mut)]
+    pub payer: Signer<'info>,
 }

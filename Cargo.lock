@@ -1264,7 +1264,7 @@ checksum = "a507befe795404456341dfab10cef66ead4c041f62b8b11bbb92bffe5d0953e0"
 [[package]]
 name = "solana-application-fees-program"
 version = "1.13.5"
-source = "git+https://github.com/blockworks-foundation/solana.git?branch=application-fees-v1.13.5#fea14e05c49f95346a96609bfabf67797e618421"
+source = "git+https://github.com/blockworks-foundation/solana.git?branch=application-fees-v1.13.5#8f3ca2827f6e6343aad9309848ad714894ddf226"
 dependencies = [
  "bincode",
  "bytemuck",
@@ -1283,7 +1283,7 @@ dependencies = [
 [[package]]
 name = "solana-frozen-abi"
 version = "1.13.5"
-source = "git+https://github.com/blockworks-foundation/solana.git?branch=application-fees-v1.13.5#fea14e05c49f95346a96609bfabf67797e618421"
+source = "git+https://github.com/blockworks-foundation/solana.git?branch=application-fees-v1.13.5#8f3ca2827f6e6343aad9309848ad714894ddf226"
 dependencies = [
  "bs58 0.4.0",
  "bv",
@@ -1304,7 +1304,7 @@ dependencies = [
 [[package]]
 name = "solana-frozen-abi-macro"
 version = "1.13.5"
-source = "git+https://github.com/blockworks-foundation/solana.git?branch=application-fees-v1.13.5#fea14e05c49f95346a96609bfabf67797e618421"
+source = "git+https://github.com/blockworks-foundation/solana.git?branch=application-fees-v1.13.5#8f3ca2827f6e6343aad9309848ad714894ddf226"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -1315,7 +1315,7 @@ dependencies = [
 [[package]]
 name = "solana-logger"
 version = "1.13.5"
-source = "git+https://github.com/blockworks-foundation/solana.git?branch=application-fees-v1.13.5#fea14e05c49f95346a96609bfabf67797e618421"
+source = "git+https://github.com/blockworks-foundation/solana.git?branch=application-fees-v1.13.5#8f3ca2827f6e6343aad9309848ad714894ddf226"
 dependencies = [
  "env_logger",
  "lazy_static",
@@ -1325,7 +1325,7 @@ dependencies = [
 [[package]]
 name = "solana-measure"
 version = "1.13.5"
-source = "git+https://github.com/blockworks-foundation/solana.git?branch=application-fees-v1.13.5#fea14e05c49f95346a96609bfabf67797e618421"
+source = "git+https://github.com/blockworks-foundation/solana.git?branch=application-fees-v1.13.5#8f3ca2827f6e6343aad9309848ad714894ddf226"
 dependencies = [
  "log",
  "solana-sdk",
@@ -1334,7 +1334,7 @@ dependencies = [
 [[package]]
 name = "solana-program"
 version = "1.13.5"
-source = "git+https://github.com/blockworks-foundation/solana.git?branch=application-fees-v1.13.5#fea14e05c49f95346a96609bfabf67797e618421"
+source = "git+https://github.com/blockworks-foundation/solana.git?branch=application-fees-v1.13.5#8f3ca2827f6e6343aad9309848ad714894ddf226"
 dependencies = [
  "base64 0.13.1",
  "bincode",
@@ -1375,7 +1375,7 @@ dependencies = [
 [[package]]
 name = "solana-program-runtime"
 version = "1.13.5"
-source = "git+https://github.com/blockworks-foundation/solana.git?branch=application-fees-v1.13.5#fea14e05c49f95346a96609bfabf67797e618421"
+source = "git+https://github.com/blockworks-foundation/solana.git?branch=application-fees-v1.13.5#8f3ca2827f6e6343aad9309848ad714894ddf226"
 dependencies = [
  "base64 0.13.1",
  "bincode",
@@ -1398,7 +1398,7 @@ dependencies = [
 [[package]]
 name = "solana-sdk"
 version = "1.13.5"
-source = "git+https://github.com/blockworks-foundation/solana.git?branch=application-fees-v1.13.5#fea14e05c49f95346a96609bfabf67797e618421"
+source = "git+https://github.com/blockworks-foundation/solana.git?branch=application-fees-v1.13.5#8f3ca2827f6e6343aad9309848ad714894ddf226"
 dependencies = [
  "assert_matches",
  "base64 0.13.1",
@@ -1448,7 +1448,7 @@ dependencies = [
 [[package]]
 name = "solana-sdk-macro"
 version = "1.13.5"
-source = "git+https://github.com/blockworks-foundation/solana.git?branch=application-fees-v1.13.5#fea14e05c49f95346a96609bfabf67797e618421"
+source = "git+https://github.com/blockworks-foundation/solana.git?branch=application-fees-v1.13.5#8f3ca2827f6e6343aad9309848ad714894ddf226"
 dependencies = [
  "bs58 0.4.0",
  "proc-macro2",

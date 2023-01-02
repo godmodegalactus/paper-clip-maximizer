@@ -19,10 +19,10 @@ impl PaperclipGroup {
         let (group_pk, group_bump) =
             Pubkey::find_program_address(&[b"pcm_group" as &[u8], &admin.to_bytes()], &crate::id());
 
-        let (source, source_bump) =
+        let (source, _source_bump) =
             Pubkey::find_program_address(&[b"source", &group_pk.to_bytes()], &crate::id());
 
-        let (burn, burn_bump) =
+        let (burn, _burn_bump) =
             Pubkey::find_program_address(&[b"burn", &group_pk.to_bytes()], &crate::id());
 
         self.admin = admin;

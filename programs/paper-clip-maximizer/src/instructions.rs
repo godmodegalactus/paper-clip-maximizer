@@ -28,3 +28,26 @@ pub struct Initialize<'info> {
     /// CHECK: application fee program
     pub application_fees_program: AccountInfo<'info>,
 }
+
+
+// Make paper clips will make paper clips from SOL.
+// It will use 1 lamport per paper clip produced. This lamports will be transfered from source account to burn account
+// if source account has enough lamports then we will rebate the called its application fees.
+// if source account does not have enough SOLs 1 SOL application fee will be charged to extract all the resources required to create the paper clip
+#[derive(Accounts)]
+pub struct MakePaperClips<'info> {
+    #[account(mut)]
+    pub group: Box<Account<'info, PaperclipGroup>>,
+
+    /// CHECK: source is a derivable address
+    #[account( mut,
+        seeds = [b"source", &group.key().to_bytes()],
+        bump,)]
+    pub source: AccountInfo<'info>,
+
+    /// CHECK: burn is a derivable address
+    #[account( mut,
+        seeds = [b"burn", &group.key().to_bytes()],
+        bump,)]
+    pub burn: AccountInfo<'info>,
+}

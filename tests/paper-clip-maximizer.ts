@@ -3,6 +3,8 @@ import { Program } from "@project-serum/anchor";
 import { web3 } from "@project-serum/anchor";
 import { PaperClipMaximizer } from "../target/types/paper_clip_maximizer";
 import * as logger from "mocha-logger"
+import struct from "buffer-layout"
+import { assert } from "chai";
 
 const applicationFeesProgram = new web3.PublicKey('App1icationFees1111111111111111111111111111')
 
@@ -35,9 +37,6 @@ describe("paper-clip-maximizer", () => {
 
   it("Initialize group", async () => {
     const [group, _group_bump] = web3.PublicKey.findProgramAddressSync([Buffer.from("pcm_group"), payer.publicKey.toBuffer()], program.programId);
-    const [authority, _authority_bump] = web3.PublicKey.findProgramAddressSync([Buffer.from("authority"), group.toBuffer()], program.programId);
-    const [source, _source_bump] = web3.PublicKey.findProgramAddressSync([Buffer.from("source"), group.toBuffer()], program.programId);
-    const [burn, _burn_bump] = web3.PublicKey.findProgramAddressSync([Buffer.from("burn"), group.toBuffer()], program.programId);
     const [applicationFeesPda, _app_fee_bump] = web3.PublicKey.findProgramAddressSync([group.toBuffer()], applicationFeesProgram);
     
     let signature = await program.methods.initialize().accounts(
@@ -51,6 +50,10 @@ describe("paper-clip-maximizer", () => {
     ).signers([payer]).rpc();
 
     await connection.confirmTransaction(signature, "finalized");
+
+    let application_fee_account_info = await connection.getAccountInfo(applicationFeesPda);
+    let fee = application_fee_account_info.data.readBigUInt64LE(0);
+    assert(fee.toString() === web3.LAMPORTS_PER_SOL.toString(), "Fee is not 1 SOL");
   });
 
   it("remove log listner", async () => {

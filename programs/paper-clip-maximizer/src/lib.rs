@@ -11,7 +11,6 @@ declare_id!("m1MbXbpDJxJGrysnftRawJYbnd9GvVJ5bLrQVA27wbw");
 #[program]
 pub mod paper_clip_maximizer {
     use anchor_lang::solana_program::{program::invoke_signed, native_token::LAMPORTS_PER_SOL};
-    use solana_program::system_instruction;
 
     use super::*;
 
@@ -32,9 +31,23 @@ pub mod paper_clip_maximizer {
         
         invoke_signed(
             &ix_update_fees, 
-            &[group.to_account_info(), ctx.accounts.admin.to_account_info().clone(), ctx.accounts.application_fees_pda.clone(), ctx.accounts.system_program.to_account_info().clone(), ctx.accounts.application_fees_program.to_account_info().clone()], 
+            &[group.to_account_info().clone(), ctx.accounts.admin.to_account_info().clone(), ctx.accounts.application_fees_pda.clone(), ctx.accounts.system_program.to_account_info().clone(), ctx.accounts.application_fees_program.to_account_info().clone()], 
             &[seeds_group],
         )?;
+        Ok(())
+    }
+
+    pub fn make_paper_clips(ctx: Context<MakePaperClips>, number_of_paper_clips_wanted : u64) -> Result<()> {
+        let group = &mut ctx.accounts.group;
+        assert!(ctx.accounts.burn.key.eq(&group.burn_account));
+        assert!(ctx.accounts.source.key.eq(&group.source_account));
+        group.number_of_paper_clips_created += number_of_paper_clips_wanted;
+
+        if ctx.accounts.source.lamports() < number_of_paper_clips_wanted {
+
+        } else {
+            
+        }
         Ok(())
     }
 }

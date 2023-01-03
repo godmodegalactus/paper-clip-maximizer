@@ -70,7 +70,8 @@ describe("paper-clip-maximizer", () => {
     const group_balance_before = await connection.getBalance(group);
     const group_info: PaperClipMaximizerGroup =
       await program.account.paperclipGroup.fetch(group);
-    const signature = await program.methods.makePaperClips(new anchor.BN(1000)).accounts(
+    
+    let tx = await program.methods.makePaperClips(new anchor.BN(1000)).accounts(
       {
         group : group, 
         applicationFeesProgram: applicationFeesProgram,
@@ -78,9 +79,11 @@ describe("paper-clip-maximizer", () => {
         burn: group_info.burnAccount,
         systemProgram: web3.SystemProgram.programId,
         payer : payer.publicKey,
-      }).signers([payer]).rpc();
+      }).transaction();
+    tx.feePayer = payer.publicKey;
+    tx.recentBlockhash = (await connection.getLatestBlockhash('confirmed')).blockhash;
     
-    await connection.confirmTransaction(signature, "finalized");
+    await web3.sendAndConfirmTransaction(connection, tx, [payer]);
     const balance_after = await connection.getBalance(payer.publicKey);
     const group_balance_after = await connection.getBalance(group);
     logger.log("before : " + balance_before);
@@ -88,7 +91,7 @@ describe("paper-clip-maximizer", () => {
     logger.log("group before : " + group_balance_before);
     logger.log("group after : " + group_balance_after);
     assert(balance_before - balance_after > web3.LAMPORTS_PER_SOL);
-    assert(group_balance_after - group_balance_before > web3.LAMPORTS_PER_SOL);
+    assert(group_balance_after - group_balance_before == web3.LAMPORTS_PER_SOL);
   })
 
   it("Application fee is rebated sucessfully", async () => {
@@ -106,7 +109,7 @@ describe("paper-clip-maximizer", () => {
     await web3.sendAndConfirmTransaction(connection, transaction, [payer]);
     const burn_balance_before = await connection.getBalance(group_info.burnAccount);
 
-    const signature = await program.methods.makePaperClips(new anchor.BN(1000)).accounts(
+    let tx = await program.methods.makePaperClips(new anchor.BN(1000)).accounts(
       {
         group : group, 
         applicationFeesProgram: applicationFeesProgram,
@@ -114,9 +117,12 @@ describe("paper-clip-maximizer", () => {
         burn: group_info.burnAccount,
         systemProgram: web3.SystemProgram.programId,
         payer : payer.publicKey,
-      }).signers([payer]).rpc();
+      }).transaction();
+    tx.feePayer = payer.publicKey;
+    tx.recentBlockhash = (await connection.getLatestBlockhash('confirmed')).blockhash;
     
-    await connection.confirmTransaction(signature, "finalized");
+    await web3.sendAndConfirmTransaction(connection, tx, [payer]);
+    
     const balance_after = await connection.getBalance(payer.publicKey);
     const group_balance_after = await connection.getBalance(group);
     const burn_balance_after = await connection.getBalance(group_info.burnAccount);

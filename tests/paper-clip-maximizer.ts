@@ -58,7 +58,7 @@ describe("paper-clip-maximizer", () => {
       }
     ).signers([payer]).rpc();
 
-    await connection.confirmTransaction(signature, "confirmed");
+    await connection.confirmTransaction(signature, "finalized");
 
     let application_fee_account_info = await connection.getAccountInfo(applicationFeesPda);
     let fee = application_fee_account_info.data.readBigUInt64LE(0);

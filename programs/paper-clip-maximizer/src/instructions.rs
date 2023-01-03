@@ -32,16 +32,14 @@ pub struct Initialize<'info> {
     pub burn: AccountInfo<'info>,
 
     /// CHECK: application fee pda to apply for group
-    #[account (mut)]
+    #[account(mut)]
     pub application_fees_pda: AccountInfo<'info>,
 
     pub system_program: Program<'info, System>,
 
     /// CHECK: application fee program
     pub application_fees_program: AccountInfo<'info>,
-
 }
-
 
 // Make paper clips will make paper clips from SOL.
 // It will use 1 lamport per paper clip produced. This lamports will be transfered from source account to burn account

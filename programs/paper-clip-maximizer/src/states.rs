@@ -14,8 +14,7 @@ pub struct PaperclipGroup {
 }
 
 impl PaperclipGroup {
-    pub fn init(&mut self, admin: Pubkey,) -> u8 {
-
+    pub fn init(&mut self, admin: Pubkey) -> u8 {
         let (group_pk, group_bump) =
             Pubkey::find_program_address(&[b"pcm_group" as &[u8], &admin.to_bytes()], &crate::id());
 

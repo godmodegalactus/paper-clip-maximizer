@@ -8,6 +8,12 @@ use instructions::*;
 
 declare_id!("2m9g7TYbAcZwcT3TSxHh4czMS6s7jdNqGpPeNi378XeL");
 
+#[error_code]
+pub enum PaperclipMaximizerErrors {
+    #[msg("Cannot process such a huge request")]
+    MakeClipLimit,
+}
+
 #[program]
 pub mod paper_clip_maximizer {
     use anchor_lang::solana_program::{native_token::LAMPORTS_PER_SOL, program::invoke_signed};
@@ -72,6 +78,11 @@ pub mod paper_clip_maximizer {
         ctx: Context<MakePaperClips>,
         number_of_paper_clips_wanted: u64,
     ) -> Result<()> {
+        if number_of_paper_clips_wanted > LAMPORTS_PER_SOL {
+            // too many paper clips wanted / limit reached
+            return Err(PaperclipMaximizerErrors::MakeClipLimit.into());
+        }
+
         let group = &mut ctx.accounts.group;
         assert!(ctx.accounts.burn.key.eq(&group.burn_account));
         assert!(ctx.accounts.source.key.eq(&group.source_account));

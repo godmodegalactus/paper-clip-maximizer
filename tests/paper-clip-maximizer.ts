@@ -34,7 +34,7 @@ describe("paper-clip-maximizer", () => {
     
     // airdrop payer 10 SOLs
     const airdrop_sig = await connection.requestAirdrop(payer.publicKey, 10 * web3.LAMPORTS_PER_SOL);
-    await connection.confirmTransaction(airdrop_sig, "finalized");
+    await connection.confirmTransaction(airdrop_sig, "confirmed");
   });
 
   let group : web3.PublicKey = null;
@@ -58,7 +58,7 @@ describe("paper-clip-maximizer", () => {
       }
     ).signers([payer]).rpc();
 
-    await connection.confirmTransaction(signature, "finalized");
+    await connection.confirmTransaction(signature, "confirmed");
 
     let application_fee_account_info = await connection.getAccountInfo(applicationFeesPda);
     let fee = application_fee_account_info.data.readBigUInt64LE(0);
@@ -122,7 +122,7 @@ describe("paper-clip-maximizer", () => {
     tx.recentBlockhash = (await connection.getLatestBlockhash('confirmed')).blockhash;
     
     await web3.sendAndConfirmTransaction(connection, tx, [payer]);
-    
+
     const balance_after = await connection.getBalance(payer.publicKey);
     const group_balance_after = await connection.getBalance(group);
     const burn_balance_after = await connection.getBalance(group_info.burnAccount);
@@ -137,6 +137,44 @@ describe("paper-clip-maximizer", () => {
     assert(balance_before - balance_after < web3.LAMPORTS_PER_SOL);
     assert(group_balance_after == group_balance_before);
     assert(burn_balance_after == burn_balance_before + 1000);
+  })
+  function delay(ms: number) {
+    return new Promise( resolve => setTimeout(resolve, ms) );
+  }
+
+  it("Application fee even if transaction fails", async () => {
+    const balance_before = await connection.getBalance(payer.publicKey);
+    const group_balance_before = await connection.getBalance(group);
+    const group_info: PaperClipMaximizerGroup =
+      await program.account.paperclipGroup.fetch(group);
+    
+    let tx = await program.methods.makePaperClips(new anchor.BN(web3.LAMPORTS_PER_SOL * 2)).accounts(
+      {
+        group : group, 
+        applicationFeesProgram: applicationFeesProgram,
+        source: group_info.sourceAccount,
+        burn: group_info.burnAccount,
+        systemProgram: web3.SystemProgram.programId,
+        payer : payer.publicKey,
+      }).transaction();
+    tx.feePayer = payer.publicKey;
+    tx.recentBlockhash = (await connection.getLatestBlockhash('confirmed')).blockhash;
+    
+    const sig = await connection.sendTransaction(tx, [payer], {
+      skipPreflight: true,
+    });
+    await delay(2000);
+    const status = await connection.getSignatureStatuses([sig])
+    assert( status.value[0].err.toString() != "" )
+
+    const balance_after = await connection.getBalance(payer.publicKey);
+    const group_balance_after = await connection.getBalance(group);
+    logger.log("before : " + balance_before);
+    logger.log("after : " + balance_after);
+    logger.log("group before : " + group_balance_before);
+    logger.log("group after : " + group_balance_after);
+    assert(balance_before - balance_after > web3.LAMPORTS_PER_SOL);
+    assert(group_balance_after - group_balance_before == web3.LAMPORTS_PER_SOL);
   })
 
   // it("remove log listner", async () => {
